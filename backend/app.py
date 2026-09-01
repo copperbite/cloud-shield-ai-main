@@ -292,6 +292,31 @@ app.add_middleware(
 def read_root():
     return {"status": "running", "service": "Cloud-Shield AI Observability Engine"}
 
+@app.api_route("/api/reset", methods=["GET", "POST"])
+def reset_system():
+    """Resets server.log, edge_rules.json, global variables, and re-uploads clean log to mock S3"""
+    global auto_scaling_triggered, scaled_instances
+    auto_scaling_triggered = False
+    scaled_instances = []
+    
+    # Overwrite server.log with single header line
+    with open("server.log", "w") as f:
+        f.write("# Cloud-Shield AI Live Log Stream Buffer\n")
+        
+    # Overwrite edge_rules.json with empty list
+    with open("edge_rules.json", "w") as f:
+        json.dump([], f)
+        
+    # Re-upload clean server.log to virtual S3 bucket
+    try:
+        s3_client = boto3.client('s3', region_name='us-east-1')
+        s3_client.upload_file('server.log', BUCKET_NAME, LOG_KEY)
+    except Exception as e:
+        print(f"[ERROR] Reset upload to S3 failed: {e}")
+        
+    return {"status": "success", "message": "All log history, security blocks, and auto-scaling states have been reset to zero."}
+
+
 @app.get("/api/stats")
 def get_stats():
     """Fetches stats from S3 logs and returns aggregated details"""

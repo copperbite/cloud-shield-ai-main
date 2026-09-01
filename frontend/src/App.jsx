@@ -5,8 +5,9 @@ import {
 } from 'recharts';
 import { 
   ShieldAlert, CheckCircle2, Activity, ShieldCheck, 
-  Server, RefreshCw, AlertTriangle, Cpu, TrendingDown 
+  Server, RefreshCw, AlertTriangle, Cpu, TrendingDown, RotateCcw
 } from 'lucide-react';
+
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
@@ -57,12 +58,22 @@ export default function App() {
     }
   };
 
+  const handleReset = async () => {
+    try {
+      await fetch('http://127.0.0.1:8000/api/reset');
+      await fetchData();
+    } catch (err) {
+      console.error("Could not reset logs", err);
+    }
+  };
+
   useEffect(() => {
     fetchData();
     // Poll APIs every 1 second for real-time updates
     const interval = setInterval(fetchData, 1000);
     return () => clearInterval(interval);
   }, []);
+
 
   // Format Status Codes data for BarChart
   const statusChartData = Object.entries(stats.status_codes).map(([code, count]) => ({
@@ -104,6 +115,15 @@ export default function App() {
           >
             <RefreshCw size={16} />
           </button>
+          <button 
+            className="btn-refresh"
+            onClick={handleReset}
+            title="Reset All Logs & Security History to 0"
+            style={{ backgroundColor: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.3)' }}
+          >
+            <RotateCcw size={16} />
+          </button>
+
         </div>
       </header>
 

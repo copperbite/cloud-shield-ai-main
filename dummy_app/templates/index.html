@@ -297,7 +297,9 @@
                 <button class="btn-download" style="background-color: #06b6d4;" onclick="trigger('download_20mb')">💾 Download 20MB (200)</button>
                 <button class="btn-error" style="background-color: #d946ef;" onclick="trigger('download_100mb')">🚨 Download 100MB (200)</button>
                 <button class="btn-attack" style="background-color: #e11d48; color: white; grid-column: span 2;" onclick="triggerSpikeSequence()">🔥 Traffic Spike (CPU Warning)</button>
+                <button class="btn-error" style="background-color: #64748b; color: white; grid-column: span 2;" onclick="resetSystemLogs()">🧹 RESET ALL LOGS & ATTACKS TO ZERO</button>
             </div>
+
 
             <div class="section-title">Log Console Stream</div>
             <div class="console" id="console">
@@ -475,11 +477,26 @@
             }, 10000);
         }
 
+        function resetSystemLogs() {
+            fetch('/api/reset')
+            .then(res => res.json())
+            .then(data => {
+                logToConsole(`[RESET] ${data.message}`, 'success');
+                document.getElementById('blockOverlay').style.display = 'none';
+                document.getElementById('crashOverlay').style.display = 'none';
+                consecutive500s = 0;
+            })
+            .catch(err => {
+                logToConsole(`[ERROR] Could not reset system: ${err}`, 'error');
+            });
+        }
+
         // Run initial check on page load
         window.onload = function() {
             const currentIp = document.getElementById('ipAddress').value;
             checkIfIpIsBlocked(currentIp);
         };
+
     </script>
 </body>
 </html>

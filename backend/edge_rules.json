@@ -1,12 +1,12 @@
 [
     {
-        "url_path": "/login",
-        "hits": 6,
+        "url_path": "/index.html",
+        "hits": 8,
         "recommended_ttl": 3600,
         "caching_status": "Recommended",
-        "avg_bytes": 256,
-        "mb_saved": 0.0,
-        "estimated_savings": 0.25
+        "avg_bytes": 5120,
+        "mb_saved": 0.03,
+        "estimated_savings": 0.35
     },
     {
         "url_path": "/checkout",
@@ -18,30 +18,12 @@
         "estimated_savings": 0.2
     },
     {
-        "url_path": "/index.html",
-        "hits": 4,
+        "url_path": "/login",
+        "hits": 5,
         "recommended_ttl": 3600,
         "caching_status": "Recommended",
-        "avg_bytes": 5120,
-        "mb_saved": 0.01,
-        "estimated_savings": 0.15
-    },
-    {
-        "url_path": "/downloads/file-100mb.zip",
-        "hits": 4,
-        "recommended_ttl": 3600,
-        "caching_status": "Recommended",
-        "avg_bytes": 104857600,
-        "mb_saved": 300.0,
-        "estimated_savings": 0.17
-    },
-    {
-        "url_path": "/api/checkout-process",
-        "hits": 3,
-        "recommended_ttl": 3600,
-        "caching_status": "Recommended",
-        "avg_bytes": 4096,
-        "mb_saved": 0.01,
-        "estimated_savings": 0.1
+        "avg_bytes": 256,
+        "mb_saved": 0.0,
+        "estimated_savings": 0.2
     }
 ]

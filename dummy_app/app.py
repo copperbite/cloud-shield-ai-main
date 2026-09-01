@@ -46,6 +46,15 @@ def trigger_action(action: dict):
     except Exception as e:
         return {"status": "error", "message": f"Could not sync log to backend API: {str(e)}"}
 
+@app.api_route("/api/reset", methods=["GET", "POST"])
+def reset_action():
+    try:
+        res = requests.get("http://127.0.0.1:8000/api/reset")
+        return res.json()
+    except Exception as e:
+        return {"status": "error", "message": f"Could not reset backend: {str(e)}"}
+
+
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="127.0.0.1", port=5000, reload=True)
