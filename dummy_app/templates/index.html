@@ -3,23 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud-Shield App Simulator</title>
+    <title>Razorpay Checkout Simulator</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700&display=swap');
+
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --primary: #3b82f6;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
+            --bg-color: #f4f8fb;
+            --card-bg: #ffffff;
+            --text-primary: #0d2366; /* Razorpay Navy */
+            --text-secondary: #5a6b87;
+            --primary: #3395ff; /* Razorpay Blue */
+            --primary-hover: #2183ea;
+            --success: #00ca72;
+            --danger: #f55b5b;
+            --warning: #f19f18;
+            --border-color: #e2e8f0;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-primary);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Mulish', 'Segoe UI', sans-serif;
             margin: 0;
             padding: 40px 20px;
             display: flex;
@@ -33,15 +37,16 @@
             width: 100%;
             max-width: 600px;
             background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 40px 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
             position: relative;
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 22px;
+            font-weight: 700;
             margin-top: 0;
             margin-bottom: 8px;
             color: var(--text-primary);
@@ -52,90 +57,95 @@
             color: var(--text-secondary);
             font-size: 14px;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
         }
 
         .section-title {
-            font-size: 14px;
+            font-size: 12px;
             text-transform: uppercase;
+            font-weight: 700;
             letter-spacing: 0.05em;
             color: var(--text-secondary);
-            margin-bottom: 12px;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 6px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
         }
 
         .ip-input-group {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            position: relative;
-            z-index: 10;
         }
 
         label {
             font-size: 13px;
-            color: var(--text-secondary);
+            color: var(--text-primary);
             font-weight: 600;
         }
 
         select {
             width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #475569;
-            background-color: #0f172a;
-            color: white;
+            padding: 14px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: #fafbfc;
+            color: var(--text-primary);
             font-size: 14px;
+            font-family: 'Mulish', sans-serif;
             outline: none;
             box-sizing: border-box;
             cursor: pointer;
+            transition: border-color 0.2s;
         }
 
         select:focus {
             border-color: var(--primary);
+            box-shadow: 0 0 0 1px var(--primary);
         }
 
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 25px;
+            gap: 12px;
+            margin-bottom: 30px;
         }
 
         button {
-            padding: 15px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 8px;
+            padding: 14px;
+            font-size: 13px;
+            font-family: 'Mulish', sans-serif;
+            font-weight: 700;
+            border-radius: 4px;
             border: none;
             cursor: pointer;
             transition: all 0.2s ease;
             color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         button:active {
-            transform: scale(0.98);
+            transform: translateY(1px);
         }
 
         .btn-normal {
             background-color: var(--primary);
+            grid-column: span 2;
         }
 
         .btn-normal:hover {
-            background-color: #2563eb;
-            box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+            background-color: var(--primary-hover);
         }
 
-        .btn-attack {
+        .btn-warning {
             background-color: var(--warning);
-            color: #0f172a;
         }
 
-        .btn-attack:hover {
-            background-color: #d97706;
-            box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+        .btn-warning:hover {
+            background-color: #df9012;
         }
 
         .btn-error {
@@ -143,41 +153,52 @@
         }
 
         .btn-error:hover {
-            background-color: #dc2626;
-            box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+            background-color: #e54c4c;
         }
-
-        .btn-download {
-            background-color: var(--success);
+        
+        .btn-purple {
+            background-color: #6a40ef;
+            grid-column: span 2;
         }
-
-        .btn-download:hover {
-            background-color: #059669;
-            box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+        
+        .btn-purple:hover {
+            background-color: #552bd3;
+        }
+        
+        .btn-reset {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            grid-column: span 2;
+        }
+        
+        .btn-reset:hover {
+            background-color: #f1f5f9;
+            color: var(--text-primary);
         }
 
         .console {
-            background-color: #090d16;
-            border: 1px solid #334155;
+            background-color: #fafbfc;
+            border: 1px solid var(--border-color);
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 4px;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 13px;
+            font-size: 12px;
             min-height: 120px;
             max-height: 200px;
             overflow-y: auto;
-            color: #38bdf8;
+            color: var(--text-primary);
         }
 
         .console-entry {
             margin-bottom: 6px;
             border-left: 3px solid var(--primary);
-            padding-left: 8px;
+            padding-left: 10px;
         }
 
         .console-entry.success {
             border-left-color: var(--success);
-            color: var(--success);
+            color: #0b804b;
         }
 
         .console-entry.error {
@@ -187,153 +208,44 @@
 
         .console-entry.warning {
             border-left-color: var(--warning);
-            color: var(--warning);
+            color: #bc790a;
         }
 
-        /* OVERLAY ANIMATIONS */
-        .crash-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(15, 23, 42, 0.98);
-            z-index: 9999;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        /* SECTIONAL BLOCK OVERLAY */
-        .block-overlay {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(239, 68, 68, 0.96);
-            z-index: 50;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            border-radius: 12px;
-            box-sizing: border-box;
-            backdrop-filter: blur(4px);
-        }
-
-        .crash-title {
-            color: var(--danger);
-            font-size: 40px;
-            font-weight: 800;
-            margin-bottom: 12px;
-            text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
-            animation: shake 0.5s infinite;
-        }
-
-        .block-title {
-            color: white;
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 12px;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-        }
-
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border-left-color: var(--primary);
-            animation: spin 1s linear infinite;
-            margin: 30px 0;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>App Simulator ⚡</h1>
-        <div class="subtitle">Simulate client traffic, attacks, and crashes to feed S3 logs</div>
+        <h1>E-Commerce Checkout Simulator 🛒</h1>
+        <div class="subtitle">Simulate checkout transactions across multiple payment gateways.</div>
 
-        <!-- IP dropdown is fully visible and clickable at the top -->
         <div class="ip-input-group">
-            <label for="ipAddress">Select Client IP Address (for Demo)</label>
-            <select id="ipAddress" onchange="checkIfIpIsBlocked(this.value)">
-                <option value="192.168.1.15">192.168.1.15 (Normal User - Local)</option>
-                <option value="10.0.0.45">10.0.0.45 (Suspected Attacker - VPN)</option>
-                <option value="172.16.0.8">172.16.0.8 (Remote API Node)</option>
-                <option value="198.51.100.22">198.51.100.22 (External Client)</option>
-                <option value="203.0.113.88">203.0.113.88 (Tor Exit Node)</option>
+            <label for="ipAddress">Select Client IP Address</label>
+            <select id="ipAddress">
+                <option value="192.168.1.15">192.168.1.15 (Normal Customer)</option>
+                <option value="10.0.0.45">10.0.0.45 (Suspected Fraud Ring - VPN)</option>
+                <option value="198.51.100.22">198.51.100.22 (External Customer)</option>
             </select>
         </div>
 
-        <!-- Container for log actions and console which gets covered when blocked -->
-        <div style="position: relative; min-height: 380px;">
+        <div>
             <div class="section-title">Log Actions</div>
             <div class="grid">
-                <button class="btn-normal" onclick="trigger('normal')">👤 Visit Page (200 OK)</button>
-                <button class="btn-attack" onclick="trigger('login_fail')">🔑 Failed Login (401)</button>
-                <button class="btn-error" onclick="trigger('error_500')">💥 Server Error (500)</button>
-                <button class="btn-download" style="background-color: #10b981;" onclick="trigger('download_10mb')">💾 Download 10MB (200)</button>
-                <button class="btn-download" style="background-color: #06b6d4;" onclick="trigger('download_20mb')">💾 Download 20MB (200)</button>
-                <button class="btn-error" style="background-color: #d946ef;" onclick="trigger('download_100mb')">🚨 Download 100MB (200)</button>
-                <button class="btn-attack" style="background-color: #e11d48; color: white; grid-column: span 2;" onclick="triggerSpikeSequence()">🔥 Traffic Spike (CPU Warning)</button>
-                <button class="btn-error" style="background-color: #64748b; color: white; grid-column: span 2;" onclick="resetSystemLogs()">🧹 RESET ALL LOGS & ATTACKS TO ZERO</button>
+                <button class="btn-normal" onclick="trigger('normal')">Generate Normal Transactions (Healthy)</button>
+                <button class="btn-error" onclick="trigger('hdfc_downtime')">Simulate HDFC Downtime (5xx)</button>
+                <button class="btn-warning" onclick="trigger('sbi_latency')">Simulate SBI High Latency</button>
+                <button class="btn-purple" onclick="trigger('fraud_spike')">Simulate Fraud Spike</button>
+                <button class="btn-reset" onclick="resetSystemLogs()">RESET ALL LOGS & AI STATE</button>
             </div>
 
 
-            <div class="section-title">Log Console Stream</div>
+            <div class="section-title">Transaction Log Stream</div>
             <div class="console" id="console">
-                <div class="console-entry">[SYSTEM] Simulator Ready. Clicks will trigger POST requests to FastAPI server.</div>
-            </div>
-
-            <!-- SECTIONAL BLOCK OVERLAY (Covers only this relative div) -->
-            <div class="block-overlay" id="blockOverlay">
-                <div class="block-title">🚫 ACCESS DENIED</div>
-                <h2 style="font-size: 16px; color: #f8fafc; max-width: 450px; line-height: 1.5; font-weight: normal; margin-top: 5px; margin-bottom: 20px;">
-                    This IP address has been blacklisted due to security policy breaches (too many failed logins).
-                </h2>
-                <p style="color: #fca5a5; font-family: monospace; font-size: 13px; font-weight: bold; border: 1px dashed #ef4444; padding: 10px; border-radius: 6px;">
-                    Change the "Client IP Address" dropdown above to continue the demo.
-                </p>
+                <div class="console-entry">[SYSTEM] Simulator Ready. Clicks will trigger POST /checkout requests.</div>
             </div>
         </div>
     </div>
 
-    <!-- CRASH MODAL OVERLAY (Fullscreen) -->
-    <div class="crash-overlay" id="crashOverlay">
-        <div class="crash-title">💥 500 INTERNAL SERVER ERROR</div>
-        <h2 style="font-size: 20px; color: var(--text-secondary); max-width: 500px; line-height: 1.5; font-weight: normal;">
-            Primary Server (Server 1) Crashed! Too many consecutive failures. Cloud-Shield AI Auto-Scaler triggered...
-        </h2>
-        <div class="spinner"></div>
-        <p style="color: var(--primary); font-weight: bold; font-family: monospace; font-size: 15px;">
-            Deploying and running Backup Server (Server 2) (10 seconds)...
-        </p>
-    </div>
-
     <script>
-        let consecutive500s = 0;
-
         function logToConsole(message, status = 'info') {
             const consoleBox = document.getElementById('console');
             const entry = document.createElement('div');
@@ -346,32 +258,10 @@
             consoleBox.scrollTop = consoleBox.scrollHeight;
         }
 
-        function checkIfIpIsBlocked(ip) {
-            fetch('http://127.0.0.1:8000/api/security')
-            .then(res => res.json())
-            .then(data => {
-                const blockOverlay = document.getElementById('blockOverlay');
-                if (data.suspicious_ips && data.suspicious_ips[ip]) {
-                    blockOverlay.style.display = 'flex';
-                } else {
-                    blockOverlay.style.display = 'none';
-                }
-            })
-            .catch(err => {
-                console.error("Could not fetch security status from backend: ", err);
-            });
-        }
-
         function trigger(actionType) {
             const ip = document.getElementById('ipAddress').value;
             
-            if (actionType === 'error_500') {
-                consecutive500s++;
-            } else {
-                consecutive500s = 0;
-            }
-
-            logToConsole(`Triggering '${actionType}' request from ${ip}...`, 'info');
+            logToConsole(`Triggering '${actionType}' checkout request from ${ip}...`, 'info');
             
             fetch('/api/trigger', {
                 method: 'POST',
@@ -386,19 +276,9 @@
             .then(res => res.json())
             .then(data => {
                 if (data.status === 'success') {
-                    logToConsole(`SUCCESS: Log registered and synced to S3.`, 'success');
-                    
-                    // If server crashes >= 5 times, trigger the recovery overlay
-                    if (consecutive500s >= 5) {
-                        triggerCrashSequence();
-                    }
-                } else if (data.status === 'blocked') {
-                    logToConsole(`BLOCKED: ${data.message}`, 'error');
-                    document.getElementById('blockOverlay').style.display = 'flex';
-                } else if (data.status === 'error') {
-                    logToConsole(`ERROR: ${data.message}`, 'error');
+                    logToConsole(`SUCCESS: Transaction log sent to backend.`, 'success');
                 } else {
-                    logToConsole(`RESPONSE: ${JSON.stringify(data)}`, 'warning');
+                    logToConsole(`ERROR: ${data.message || JSON.stringify(data)}`, 'error');
                 }
             })
             .catch(err => {
@@ -406,97 +286,16 @@
             });
         }
 
-        function triggerCrashSequence() {
-            const overlay = document.getElementById('crashOverlay');
-            overlay.style.display = 'flex';
-            consecutive500s = 0; // reset local count
-            
-            // Auto-heal after 10 seconds by deploying new server and sending a 200 OK request
-            setTimeout(() => {
-                const ip = document.getElementById('ipAddress').value;
-                fetch('/api/trigger', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'normal', ip: ip })
-                })
-                .then(res => res.json())
-                .then(() => {
-                    overlay.style.display = 'none';
-                    logToConsole(`[HEALED] Backup Server (Server 2) stabilized traffic. Primary Server (Server 1) restored!`, 'success');
-                })
-                .catch(() => {
-                    overlay.style.display = 'none';
-                });
-            }, 10000);
-        }
-
-        function triggerSpikeSequence() {
-            const ip = document.getElementById('ipAddress').value;
-            logToConsole(`Initializing Heavy Traffic Spike Simulation...`, 'warning');
-            
-            // Step 1: Send CPU 70%, Latency 150ms
-            setTimeout(() => {
-                logToConsole(`[SPIKE] Rising CPU load detected (70% CPU, 150ms delay)...`, 'warning');
-                fetch('/api/trigger', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'cpu_spike', cpu: 70, latency: 150, ip: ip })
-                });
-            }, 100);
-
-            // Step 2: Send CPU 82%, Latency 320ms
-            setTimeout(() => {
-                logToConsole(`[SPIKE] Server throttling warning (82% CPU, 320ms delay)...`, 'warning');
-                fetch('/api/trigger', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'cpu_spike', cpu: 82, latency: 320, ip: ip })
-                });
-            }, 800);
-
-            // Step 3: Send CPU 96%, Latency 640ms
-            setTimeout(() => {
-                logToConsole(`[CRITICAL] Server CPU bottleneck reached (96% CPU, 640ms delay). Triggering AI Shield!`, 'error');
-                fetch('/api/trigger', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'cpu_spike', cpu: 96, latency: 640, ip: ip })
-                }).then(() => {
-                    logToConsole(`[PRE-EMPTIVE HEAL] AI Shield deployed Backup Server (Server 2) successfully. Site status online!`, 'success');
-                });
-            }, 1600);
-
-            // Step 4: Cooldown recovery after 10 seconds
-            setTimeout(() => {
-                logToConsole(`[SPIKE RESOLVED] Traffic spike settled. Restoring standard single-server routing.`, 'success');
-                fetch('/api/trigger', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'normal', ip: ip })
-                });
-            }, 10000);
-        }
-
         function resetSystemLogs() {
             fetch('/api/reset')
             .then(res => res.json())
             .then(data => {
                 logToConsole(`[RESET] ${data.message}`, 'success');
-                document.getElementById('blockOverlay').style.display = 'none';
-                document.getElementById('crashOverlay').style.display = 'none';
-                consecutive500s = 0;
             })
             .catch(err => {
                 logToConsole(`[ERROR] Could not reset system: ${err}`, 'error');
             });
         }
-
-        // Run initial check on page load
-        window.onload = function() {
-            const currentIp = document.getElementById('ipAddress').value;
-            checkIfIpIsBlocked(currentIp);
-        };
-
     </script>
 </body>
 </html>

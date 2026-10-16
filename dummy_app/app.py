@@ -4,47 +4,60 @@ from fastapi.templating import Jinja2Templates
 import uvicorn
 import requests
 import time
+import random
 
-app = FastAPI(title="Dummy Customer App")
+app = FastAPI(title="Dummy Checkout App")
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
-    """Serves the main interactive control screen for generating fake logs"""
+    """Serves the main interactive control screen for generating checkout logs"""
     return templates.TemplateResponse(request=request, name="index.html")
 
 @app.post("/api/trigger")
 def trigger_action(action: dict):
-    """Triggers specific types of mock logs and posts them to backend server"""
+    """Triggers specific types of payment logs and posts them to backend server"""
     action_type = action.get("type")
     ip = action.get("ip", "192.168.1.100")
     timestamp = time.strftime("%d/%b/%Y:%H:%M:%S")
     
+    amount = random.randint(100, 5000)
+    log_lines = []
+    
     if action_type == "normal":
-        log_line = f'{ip} - - [{timestamp}] "GET /index.html" 200 5120'
-    elif action_type == "login_fail":
-        log_line = f'{ip} - - [{timestamp}] "POST /login" 401 256'
-    elif action_type == "error_500":
-        log_line = f'{ip} - - [{timestamp}] "GET /checkout" 500 0'
-    elif action_type == "download_10mb":
-        log_line = f'{ip} - - [{timestamp}] "GET /downloads/file-10mb.zip" 200 10485760'
-    elif action_type == "download_20mb":
-        log_line = f'{ip} - - [{timestamp}] "GET /downloads/file-20mb.zip" 200 20971520'
-    elif action_type == "download_100mb":
-        log_line = f'{ip} - - [{timestamp}] "GET /downloads/file-100mb.zip" 200 104857600'
-    elif action_type == "cpu_spike":
-        cpu = action.get("cpu", 90)
-        latency = action.get("latency", 500)
-        log_line = f'{ip} - - [{timestamp}] "POST /api/checkout-process" 200 4096 [CPU:{cpu}%] [LATENCY:{latency}ms]'
+        gateways = ["Razorpay_Core", "Bank_HDFC", "Bank_SBI"]
+        gw = random.choices(gateways, weights=[50, 30, 20])[0]
+        latency = random.randint(50, 200)
+        log_lines.append(f'{ip} - - [{timestamp}] "POST /checkout" 200 {amount} {gw} {latency}')
+        
+    elif action_type == "hdfc_downtime":
+        gw = "Bank_HDFC"
+        latency = random.randint(1500, 5000)
+        status = random.choice([500, 503, 504])
+        log_lines.append(f'{ip} - - [{timestamp}] "POST /checkout" {status} {amount} {gw} {latency}')
+        
+    elif action_type == "sbi_latency":
+        gw = "Bank_SBI"
+        latency = random.randint(800, 2500)
+        log_lines.append(f'{ip} - - [{timestamp}] "POST /checkout" 200 {amount} {gw} {latency}')
+        
+    elif action_type == "fraud_spike":
+        gw = "Razorpay_Core"
+        latency = random.randint(50, 100)
+        log_lines.append(f'{ip} - - [{timestamp}] "POST /checkout" 200 {amount} {gw} {latency}')
+        
     else:
         return {"error": f"Unknown action type: {action_type}"}
         
-    # Send log line to Backend S3 synced log database
-    try:
-        res = requests.post("http://127.0.0.1:8000/api/log", json={"log_line": log_line, "ip": ip})
-        return res.json()
-    except Exception as e:
-        return {"status": "error", "message": f"Could not sync log to backend API: {str(e)}"}
+    results = []
+    for line in log_lines:
+        try:
+            res = requests.post("http://127.0.0.1:8000/api/log", json={"log_line": line, "ip": ip})
+            results.append(res.json())
+        except Exception as e:
+            results.append({"status": "error", "message": f"Could not sync log to backend API: {str(e)}"})
+            
+    return {"status": "success", "results": results}
 
 @app.api_route("/api/reset", methods=["GET", "POST"])
 def reset_action():
@@ -53,8 +66,6 @@ def reset_action():
         return res.json()
     except Exception as e:
         return {"status": "error", "message": f"Could not reset backend: {str(e)}"}
-
-
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="127.0.0.1", port=5000, reload=True)
